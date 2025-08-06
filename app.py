@@ -1,10 +1,10 @@
 
 import datetime
-
+import string
 
 def parse(mssg):
-    return mssg.lower().split()
-
+    clean = ''.join([char for char in mssg if char not in string.punctuation])
+    return clean.lower().split()
 
 def intent(mssg_parsed):
     usr_intent = '' 
@@ -20,6 +20,9 @@ def intent(mssg_parsed):
     if "shutdown" in mssg_parsed:
         usr_intent = "shutdown"
 
+    if "help" in mssg_parsed:
+        usr_intent = "help"
+
     return usr_intent 
 
 def reply(intent):
@@ -32,14 +35,23 @@ def reply(intent):
         return("Do i look like a clown to you?")
     elif intent == 'shutdown':
         return("Allright then , I guess . Bye.")
+    elif usr_intent == "help":
+        return("I can help you with reminding you of stuff , or I can maybe tell you joke.\n"
+        " You can even try asking me about the weather.")
 
     else:
         return("MHM... sorry I forgot to care.")
 
 
-time = datetime.datetime.now()
-message = input("Go ahead then, ... take my time.    ")
-print(f"{time}    you: {message}")
-mssg_parsed = parse(message)
-usr_intent = intent(mssg_parsed)
-print(f"{time}    jarvis: {reply(usr_intent)}")
+
+
+print("Go ahead then, ... take my time.    ")
+usr_intent = ''
+
+while usr_intent != "shutdown":
+    time = datetime.datetime.now()
+    message = input()
+    print(f"{time}    you: {message}")
+    mssg_parsed = parse(message)
+    usr_intent = intent(mssg_parsed)
+    print(f"{time}    jarvis: {reply(usr_intent)}")
